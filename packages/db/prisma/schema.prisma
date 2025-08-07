@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../../../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -15,38 +14,39 @@ datasource db {
 }
 
 model User {
-  id    String   @id   @default(uuid())
-  email String   @unique
+  id              String      @id     @default(uuid())
+  email           String
 }
 
-model Website{
-  id String @id @default(uuid())
-  url String
-  userId String
-  ticks  WebsiteTick[]
-  disabled Boolean @default(false)
+model Website {
+  id        String      @id     @default(uuid())
+  url       String
+  userId    String
+  ticks     WebsiteTick[]
+  disabled  Boolean     @default(false)
 }
 
-model Validator{
-  id String @id @default(uuid())
-  ip String
-  location String
+model Validator {
+  id        String      @id     @default(uuid())
   publicKey String
-  ticks WebsiteTick[]
+  location  String
+  ip        String
+  pendingPayouts  Int         @default(0)
+  ticks     WebsiteTick[]
 }
 
-model WebsiteTick{
-  id String @id @default(uuid())
-  websiteId String
-  validatorId String
-  createdAt   DateTime @default(now())
-  latency   Float
-  Status   WebsiteStatus
-  website Website @relation(fields: [websiteId], references: [id])
-  validator Validator @relation(fields: [validatorId], references: [id])
+model WebsiteTick {
+  id              String      @id     @default(uuid())
+  websiteId       String
+  validatorId     String
+  createdAt       DateTime
+  status          WebsiteStatus
+  latency         Float
+  website         Website    @relation(fields: [websiteId], references: [id])
+  validator       Validator    @relation(fields: [validatorId], references: [id])
 }
 
-enum WebsiteStatus{
-  online
-  offline
+enum WebsiteStatus {
+  Good
+  Bad
 }
